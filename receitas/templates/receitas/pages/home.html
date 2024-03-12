@@ -1,17 +1,17 @@
 {% include 'receitas/partials/head.html' %}
+
 <body>
-    <header class="main-header-container">
-        <div class="main-header container">
-            <h1>
-                <a href="/">
-                    <i class="fa-solid fa-utensils"></i>
-                    <span>
-                        Receitas by {{name}}
-                    </span>
-                </a>
-            </h1>
+    {% include 'receitas/partials/header.html' %}
+    
+    <div class="search-container">
+
+        <div class="container">
+         <form action="" class="search-form">
+            <input type="search"class="search-input" name="name"  placeholder="Digite para pesquisar... Exemplo: Burguer">
+            <button type="submit" class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
         </div>
-    </header>
+    </div>
 </body>
 
 </html>
