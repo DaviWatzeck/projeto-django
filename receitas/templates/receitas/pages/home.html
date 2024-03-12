@@ -2,16 +2,14 @@
 
 <body>
     {% include 'receitas/partials/header.html' %}
+    {% include 'receitas/partials/search.html' %}
     
-    <div class="search-container">
-
-        <div class="container">
-         <form action="" class="search-form">
-            <input type="search"class="search-input" name="name"  placeholder="Digite para pesquisar... Exemplo: Burguer">
-            <button type="submit" class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
-        </form>
+    <main class="main-content-container">
+        <div class="main-content main-content-list container">
+            {% include 'receitas/partials/recipes.html' %}
         </div>
-    </div>
+    </main>
+    {% include 'receitas/partials/footer.html' %}
 </body>
 
 </html>
