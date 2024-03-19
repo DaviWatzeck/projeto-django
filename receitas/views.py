@@ -1,11 +1,27 @@
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import get_list_or_404, render
 
+from receitas.models import Receita
 from utils.recipes.factory import make_recipe
 
 
 def home(request):
+    receitas = Receita.objects.filter(is_published=True).order_by('-id')
     return render(request, 'receitas/pages/home.html', context={
-        'receitas': [make_recipe() for _ in range(10)],
+        'receitas': receitas,
+    })
+
+
+def category(request, category_id):
+    receitas = get_list_or_404(
+        Receita.objects.filter(
+            category__id=category_id,
+            is_published=True).order_by('-id')
+    )
+
+    return render(request, 'receitas/pages/category.html', context={
+        'receitas': receitas,
+        'title': f'{receitas[0].category.name} - Category | '
     })
 
 
