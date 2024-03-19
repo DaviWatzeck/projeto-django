@@ -67,9 +67,13 @@
         {% endif %}
 
         {% if is_detail_page is True %}
-        <div class="preparation-steps">
-            {{receita.preparation_steps|linebreaksbr}}
-        </div>
+            <div class="preparation-steps">
+                {% if receita.preparations_steps_is_html is True %}
+                    {{receita.preparations_steps|safe}}
+                {% else %}
+                    {{receita.preparations_steps|linebreaksbr}}
+                {% endif %}
+                </div>
         {% endif %}
 </div>
 
