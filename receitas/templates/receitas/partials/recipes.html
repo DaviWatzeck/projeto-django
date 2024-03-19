@@ -1,282 +1,62 @@
 <div class="recipe recipe-list-item">
     <div class="recipe-cover">
-        <img src="https://via.placeholder.com/1280x720.png/2086c2" alt="Temporário">
+        <a href="{% url 'receitas:receita' receita.id %}">
+        <img src="{{receita.cover.url}}" alt="Temporário">
+        </a>
     </div>
     <div class="recipe-title-container">
-        <h2 class="recipe-title">Double Smash Cheddar Bacon.</h2>
+        <h2 class="recipe-title">
+            <a href="{% url 'receitas:receita' receita.id %}">
+            {{ receita.title }}
+            </a>
+        </h2>
     </div>
     <div class="recipe-author">
         <span class="recipe-author-item">
             <i class="fa-solid fa-user"></i>
-            Davi Watzeck
+            {{ receita.author.first_name }} {{receita.author.last_name}}
         </span>
         <span class="recipe-author-item">
             <i class="fa-solid fa-calendar-days"></i>
-            12/03/2023 às 15:20
+            {{ receita.created_at|date:"d/m/Y" }} às {{ receita.created_at|date:"H:i" }}
         </span>
         <span class="recipe-author-item">
             <a href="/receitas/categoria/lanches">
                 <i class="fa-solid fa-burger"></i>
-                <span>Hamburguer</span>
+                <span>{{receita.category.name}}</span>
             </a>
         </span>
     </div>
     <div class="recipe-content">
-        <p>Hambúrguer Smash: Carnudo, crocante, com bacon, queijo cheddar, irresistível molho.</p>
+        <p>{{receita.description}}</p>
     </div>
     <div class="recipe-meta-container">
         <div class="recipe-meta recipe-preparation">
             <h3 class="recipe-meta-title"><i class="fa-solid fa-stopwatch"></i>Preparo</h3>
             <div class="recipe-meta-text">
-                15 a 20 minutos
+                {{receita.preparation_time}} {{receita.preparation_time_unit}}
             </div>
             </div>
             <div class="recipe-meta recipe-servings">
                     <h3 class="recipe-meta-title"><i class="fa-solid fa-pizza-slice"></i>Porções</h3>
                     <div class="recipe-meta-text">
-                        1 Porção
+                        {{receita.servings}} {{receita.servings_unit}}
                     </div>
             </div>
         </div>
+        {% if is_detail_page is not True%}
         <footer class="recipe-footer">
-            <a class="recipe-read-more button button-dark button-full-width" href="/recipes/3/">
+            <a class="recipe-read-more button button-dark button-full-width" href="{% url 'receitas:receita' receita.id %}">
                 <i class="fas fa-eye"></i>
                 <span>Ver mais...</span>
             </a>
         </footer>
-</div>
-<div class="recipe recipe-list-item">
-    <div class="recipe-cover">
-        <img src="https://via.placeholder.com/1280x720.png/2086c2" alt="Temporário">
-    </div>
-    <div class="recipe-title-container">
-        <h2 class="recipe-title">Double Smash Cheddar Bacon.</h2>
-    </div>
-    <div class="recipe-author">
-        <span class="recipe-author-item">
-            <i class="fa-solid fa-user"></i>
-            Davi Watzeck
-        </span>
-        <span class="recipe-author-item">
-            <i class="fa-solid fa-calendar-days"></i>
-            12/03/2023 às 15:20
-        </span>
-        <span class="recipe-author-item">
-            <a href="/receitas/categoria/lanches">
-                <i class="fa-solid fa-burger"></i>
-                <span>Hamburguer</span>
-            </a>
-        </span>
-    </div>
-    <div class="recipe-content">
-        <p>Hambúrguer Smash: Carnudo, crocante, com bacon, queijo cheddar, irresistível molho.</p>
-    </div>
-    <div class="recipe-meta-container">
-        <div class="recipe-meta recipe-preparation">
-            <h3 class="recipe-meta-title"><i class="fa-solid fa-stopwatch"></i>Preparo</h3>
-            <div class="recipe-meta-text">
-                15 a 20 minutos
-            </div>
-            </div>
-            <div class="recipe-meta recipe-servings">
-                    <h3 class="recipe-meta-title"><i class="fa-solid fa-pizza-slice"></i>Porções</h3>
-                    <div class="recipe-meta-text">
-                        1 Porção
-                    </div>
-            </div>
+        {% endif %}
+
+        {% if is_detail_page is True %}
+        <div class="preparation-steps">
+            {{receita.preparation_steps|linebreaksbr}}
         </div>
-        <footer class="recipe-footer">
-            <a class="recipe-read-more button button-dark button-full-width" href="/recipes/3/">
-                <i class="fas fa-eye"></i>
-                <span>Ver mais...</span>
-            </a>
-        </footer>
+        {% endif %}
 </div>
-<div class="recipe recipe-list-item">
-    <div class="recipe-cover">
-        <img src="https://via.placeholder.com/1280x720.png/2086c2" alt="Temporário">
-    </div>
-    <div class="recipe-title-container">
-        <h2 class="recipe-title">Double Smash Cheddar Bacon.</h2>
-    </div>
-    <div class="recipe-author">
-        <span class="recipe-author-item">
-            <i class="fa-solid fa-user"></i>
-            Davi Watzeck
-        </span>
-        <span class="recipe-author-item">
-            <i class="fa-solid fa-calendar-days"></i>
-            12/03/2023 às 15:20
-        </span>
-        <span class="recipe-author-item">
-            <a href="/receitas/categoria/lanches">
-                <i class="fa-solid fa-burger"></i>
-                <span>Hamburguer</span>
-            </a>
-        </span>
-    </div>
-    <div class="recipe-content">
-        <p>Hambúrguer Smash: Carnudo, crocante, com bacon, queijo cheddar, irresistível molho.</p>
-    </div>
-    <div class="recipe-meta-container">
-        <div class="recipe-meta recipe-preparation">
-            <h3 class="recipe-meta-title"><i class="fa-solid fa-stopwatch"></i>Preparo</h3>
-            <div class="recipe-meta-text">
-                15 a 20 minutos
-            </div>
-            </div>
-            <div class="recipe-meta recipe-servings">
-                    <h3 class="recipe-meta-title"><i class="fa-solid fa-pizza-slice"></i>Porções</h3>
-                    <div class="recipe-meta-text">
-                        1 Porção
-                    </div>
-            </div>
-        </div>
-        <footer class="recipe-footer">
-            <a class="recipe-read-more button button-dark button-full-width" href="/recipes/3/">
-                <i class="fas fa-eye"></i>
-                <span>Ver mais...</span>
-            </a>
-        </footer>
-</div>
-<div class="recipe recipe-list-item">
-    <div class="recipe-cover">
-        <img src="https://via.placeholder.com/1280x720.png/2086c2" alt="Temporário">
-    </div>
-    <div class="recipe-title-container">
-        <h2 class="recipe-title">Double Smash Cheddar Bacon.</h2>
-    </div>
-    <div class="recipe-author">
-        <span class="recipe-author-item">
-            <i class="fa-solid fa-user"></i>
-            Davi Watzeck
-        </span>
-        <span class="recipe-author-item">
-            <i class="fa-solid fa-calendar-days"></i>
-            12/03/2023 às 15:20
-        </span>
-        <span class="recipe-author-item">
-            <a href="/receitas/categoria/lanches">
-                <i class="fa-solid fa-burger"></i>
-                <span>Hamburguer</span>
-            </a>
-        </span>
-    </div>
-    <div class="recipe-content">
-        <p>Hambúrguer Smash: Carnudo, crocante, com bacon, queijo cheddar, irresistível molho.</p>
-    </div>
-    <div class="recipe-meta-container">
-        <div class="recipe-meta recipe-preparation">
-            <h3 class="recipe-meta-title"><i class="fa-solid fa-stopwatch"></i>Preparo</h3>
-            <div class="recipe-meta-text">
-                15 a 20 minutos
-            </div>
-            </div>
-            <div class="recipe-meta recipe-servings">
-                    <h3 class="recipe-meta-title"><i class="fa-solid fa-pizza-slice"></i>Porções</h3>
-                    <div class="recipe-meta-text">
-                        1 Porção
-                    </div>
-            </div>
-        </div>
-        <footer class="recipe-footer">
-            <a class="recipe-read-more button button-dark button-full-width" href="/recipes/3/">
-                <i class="fas fa-eye"></i>
-                <span>Ver mais...</span>
-            </a>
-        </footer>
-</div>
-<div class="recipe recipe-list-item">
-    <div class="recipe-cover">
-        <img src="https://via.placeholder.com/1280x720.png/2086c2" alt="Temporário">
-    </div>
-    <div class="recipe-title-container">
-        <h2 class="recipe-title">Double Smash Cheddar Bacon.</h2>
-    </div>
-    <div class="recipe-author">
-        <span class="recipe-author-item">
-            <i class="fa-solid fa-user"></i>
-            Davi Watzeck
-        </span>
-        <span class="recipe-author-item">
-            <i class="fa-solid fa-calendar-days"></i>
-            12/03/2023 às 15:20
-        </span>
-        <span class="recipe-author-item">
-            <a href="/receitas/categoria/lanches">
-                <i class="fa-solid fa-burger"></i>
-                <span>Hamburguer</span>
-            </a>
-        </span>
-    </div>
-    <div class="recipe-content">
-        <p>Hambúrguer Smash: Carnudo, crocante, com bacon, queijo cheddar, irresistível molho.</p>
-    </div>
-    <div class="recipe-meta-container">
-        <div class="recipe-meta recipe-preparation">
-            <h3 class="recipe-meta-title"><i class="fa-solid fa-stopwatch"></i>Preparo</h3>
-            <div class="recipe-meta-text">
-                15 a 20 minutos
-            </div>
-            </div>
-            <div class="recipe-meta recipe-servings">
-                    <h3 class="recipe-meta-title"><i class="fa-solid fa-pizza-slice"></i>Porções</h3>
-                    <div class="recipe-meta-text">
-                        1 Porção
-                    </div>
-            </div>
-        </div>
-        <footer class="recipe-footer">
-            <a class="recipe-read-more button button-dark button-full-width" href="/recipes/3/">
-                <i class="fas fa-eye"></i>
-                <span>Ver mais...</span>
-            </a>
-        </footer>
-</div>
-<div class="recipe recipe-list-item">
-    <div class="recipe-cover">
-        <img src="https://via.placeholder.com/1280x720.png/2086c2" alt="Temporário">
-    </div>
-    <div class="recipe-title-container">
-        <h2 class="recipe-title">Double Smash Cheddar Bacon.</h2>
-    </div>
-    <div class="recipe-author">
-        <span class="recipe-author-item">
-            <i class="fa-solid fa-user"></i>
-            Davi Watzeck
-        </span>
-        <span class="recipe-author-item">
-            <i class="fa-solid fa-calendar-days"></i>
-            12/03/2023 às 15:20
-        </span>
-        <span class="recipe-author-item">
-            <a href="/receitas/categoria/lanches">
-                <i class="fa-solid fa-burger"></i>
-                <span>Hamburguer</span>
-            </a>
-        </span>
-    </div>
-    <div class="recipe-content">
-        <p>Hambúrguer Smash: Carnudo, crocante, com bacon, queijo cheddar, irresistível molho.</p>
-    </div>
-    <div class="recipe-meta-container">
-        <div class="recipe-meta recipe-preparation">
-            <h3 class="recipe-meta-title"><i class="fa-solid fa-stopwatch"></i>Preparo</h3>
-            <div class="recipe-meta-text">
-                15 a 20 minutos
-            </div>
-            </div>
-            <div class="recipe-meta recipe-servings">
-                    <h3 class="recipe-meta-title"><i class="fa-solid fa-pizza-slice"></i>Porções</h3>
-                    <div class="recipe-meta-text">
-                        1 Porção
-                    </div>
-            </div>
-        </div>
-        <footer class="recipe-footer">
-            <a class="recipe-read-more button button-dark button-full-width" href="/recipes/3/">
-                <i class="fas fa-eye"></i>
-                <span>Ver mais..</span>
-            </a>
-        </footer>
-</div>
+
