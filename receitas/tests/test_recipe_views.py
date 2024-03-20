@@ -1,7 +1,9 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import resolve, reverse
 
 from receitas import views
+from receitas.models import Category, Receita
 
 
 class ReceitaViewsTest(TestCase):
@@ -29,7 +31,7 @@ class ReceitaViewsTest(TestCase):
         response = self.client.get(reverse('receitas:home'))
         self.assertTemplateUsed(response, 'receitas/pages/home.html')
 
-    def test_recipe_home_template_shows_no_recipes_found_if_no_recipe(self):
+    def test_receita_home_template_shows_no_receitas_found_if_no_recipe(self):
         response = self.client.get(reverse('receitas:home'))
         self.assertIn(
             '<h1> No recipes found here 😥<h1>',
@@ -47,3 +49,35 @@ class ReceitaViewsTest(TestCase):
             reverse('receitas:receita', kwargs={'id': 1000})
         )
         self.assertEqual(response.status_code, 404)
+
+    def test_receita_home_template_loads_receitas(self):
+        category = Category.objects.create(name='Category')
+        author = User.objects.create_user(
+            first_name='user',
+            last_name='name',
+            username='username',
+            password='12345',
+            email='username@email.com'
+        )
+        receita = Receita.objects.create(
+            category=category,
+            author=author,
+            title='Receita Title',
+            description='Receita Description',
+            slug='receita-slug',
+            preparation_time=10,
+            preparation_time_unit='Minutos',
+            servings=5,
+            servings_unit='Porções',
+            preparations_steps='Receita Preparation Steps',
+            preparations_steps_is_html=False,
+            is_published=True,
+        )
+        response = self.client.get(reverse('receitas:home'))
+        content = response.content.decode('utf-8')
+        response_context_receitas = response.context['receitas']
+
+        self.assertIn('Receita Title', content)
+        self.assertIn('10 Minutos', content)
+        self.assertIn('5 Porções', content)
+        self.assertEqual(len(response_context_receitas), 1)
