@@ -20,3 +20,11 @@ class ReceitaViewsTest(TestCase):
             reverse('receitas:receita', kwargs={'id': 1})
         )
         self.assertIs(view.func, views.receita)
+
+    def test_receita_home_view_returns_status_code_200_OK(self):
+        response = self.client.get(reverse('receitas:home'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_receita_home_view_loads_correct_template(self):
+        response = self.client.get(reverse('receitas:home'))
+        self.assertTemplateUsed(response, 'receitas/pages/home.html')
