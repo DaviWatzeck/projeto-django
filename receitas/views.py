@@ -1,8 +1,9 @@
-from django.http import HttpResponse
+# from django.http import HttpResponse
+# from utils.recipes.factory import make_recipe
+
 from django.shortcuts import get_list_or_404, get_object_or_404, render
 
 from receitas.models import Receita
-from utils.recipes.factory import make_recipe
 
 
 def home(request):
