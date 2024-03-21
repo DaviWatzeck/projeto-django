@@ -36,6 +36,20 @@ class ReceitaViewsTest(ReceitaTestBase):
         self.assertIn('Receita Title', content)
         self.assertEqual(len(response_context_receitas), 1)
 
+    def test_receita_home_template_dont_load_recipes_not_published(self):
+        """
+        Testa se a receita está publicada, se for false, não mostra
+        """
+        self.make_receita(is_published=False)
+
+        response = self.client.get(reverse('receitas:home'))
+
+        # Checa se uma receita existe
+        self.assertIn(
+            '<h1> No recipes found here 😥<h1>',
+            response.content.decode('utf-8')
+        )
+
     def test_receita_category_view_function_is_correct(self):
         view = resolve(
             reverse('receitas:category', kwargs={'category_id': 1000})
@@ -50,14 +64,26 @@ class ReceitaViewsTest(ReceitaTestBase):
 
     def test_receita_category_template_loads_receitas(self):
         needed_title = 'Category Test'
-        # Precisa de uma receita para esse teste!
+        # Precisa de uma receita para esse teste e cria um titulo para testar
         self.make_receita(title=needed_title)
 
         response = self.client.get(reverse('receitas:category', args=(1,)))
         content = response.content.decode('utf-8')
 
-        # Checa se uma receita existe
+        # Checa se o titulo da receita existe
         self.assertIn(needed_title, content)
+
+    def test_receita_category_template_dont_load_recipes_not_published(self):
+        """
+        Testa se a receita está publicada, se for false, não mostra
+        """
+
+        receita = self.make_receita(is_published=False)
+
+        response = self.client.get(
+            reverse('receitas:receita', kwargs={'id': receita.category.id}))
+
+        self.assertEqual(response.status_code, 404)
 
     def test_receita_detail_view_function_is_correct(self):
         view = resolve(
@@ -74,7 +100,6 @@ class ReceitaViewsTest(ReceitaTestBase):
     def test_receita_detail_template_loads_the_correct_receita(self):
         needed_title = 'Detail Test - Carrega uma receita'
 
-        # Precisa de uma receita para esse teste!
         self.make_receita(title=needed_title)
 
         response = self.client.get(
@@ -84,5 +109,22 @@ class ReceitaViewsTest(ReceitaTestBase):
         )
         content = response.content.decode('utf-8')
 
-        # Checa se uma receita existe
         self.assertIn(needed_title, content)
+
+    def test_receita_detail_template_dont_load_recipe_not_published(self):
+        """
+        Testa se a receita está publicada, se for false, não mostra
+        """
+
+        receita = self.make_receita(is_published=False)
+
+        response = self.client.get(
+            reverse(
+                'receitas:receita',
+                kwargs={
+                    'id': receita.id
+                }
+            )
+        )
+
+        self.assertEqual(response.status_code, 404)
