@@ -1,19 +1,24 @@
-# from django.http import HttpResponse
-# from utils.recipes.factory import make_recipe
+import os
 
 from django.db.models import Q
 from django.http.response import Http404
 from django.shortcuts import get_list_or_404, get_object_or_404, render
 
 from receitas.models import Receita
+from utils.pagination import make_pagination
+
+PER_PAGE = int(os.environ.get('PER_PAGE', 6))
 
 
 def home(request):
     receitas = Receita.objects.filter(
         is_published=True).order_by('-id')
 
+    page_obj, pagination_range = make_pagination(request, receitas, PER_PAGE)
+
     return render(request, 'receitas/pages/home.html', context={
-        'receitas': receitas,
+        'receitas': page_obj,
+        'pagination_range': pagination_range
     })
 
 
@@ -24,8 +29,11 @@ def category(request, category_id):
             is_published=True).order_by('-id')
     )
 
+    page_obj, pagination_range = make_pagination(request, receitas, PER_PAGE)
+
     return render(request, 'receitas/pages/category.html', context={
-        'receitas': receitas,
+        'receitas': page_obj,
+        'pagination_range': pagination_range,
         'title': f'{receitas[0].category.name} - Category | '
     })
 
@@ -53,8 +61,12 @@ def search(request):
         is_published=True
     ).order_by('-id')
 
+    page_obj, pagination_range = make_pagination(request, receitas, PER_PAGE)
+
     return render(request, 'receitas/pages/search.html', {
         'page_title': f'Search for "{search_term}" |',
         'search_term': search_term,
-        'receitas': receitas,
+        'receitas': page_obj,
+        'pagination_range': pagination_range,
+        'additional_url_query': f'&q={search_term}',
     })
