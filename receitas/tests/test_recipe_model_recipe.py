@@ -21,7 +21,7 @@ class ReceitaModelTest(ReceitaTestBase):
             author=self.make_author(username='newuser'),
             title='Receita Title',
             description='Receita Description',
-            slug='receita-slug',
+            slug='receita-slug-for-no-default',
             preparation_time=10,
             preparation_time_unit='Minutos',
             servings=5,
