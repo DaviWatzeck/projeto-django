@@ -7,6 +7,8 @@
         <h2>Register {{  request.session.number }}</h2>
     </div>
 
+    {% include 'receitas/partials/messages.html' %}
+
     <div class="main-content container">
         <form action="{% url 'authors:create' %}" method="POST">
             {% csrf_token %}
@@ -24,6 +26,15 @@
                     </div>
                 {% endfor %}
             </div>
+            {% if form.errors %}
+            <div class="form-content form-content-grid">
+                <div class="form-group">
+                    <div class="message message-error">
+                        Please, fix the errors in the form and send again
+                    </div>
+                </div>
+            </div>
+            {% endif %}
 
             <div class="form-content form-content-grid">
                 <div class="form-group">
