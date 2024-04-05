@@ -53,9 +53,7 @@ class ReceitaHomeViewTest(ReceitaTestBase):
         )
 
     def test_receita_home_is_paginated(self):
-        for i in range(20):
-            kwargs = {'slug': f'r{i}', 'author_data': {'username': f'u{i}'}}
-            self.make_receita(**kwargs)
+        self.make_receita_in_batch(qtd=20)
 
         with patch('receitas.views.PER_PAGE', new=9):
             response = self.client.get(reverse('receitas:home'))
@@ -68,9 +66,7 @@ class ReceitaHomeViewTest(ReceitaTestBase):
             self.assertEqual(len(paginator.get_page(3)), 2)
 
     def test_invalid_page_query_uses_page_one(self):
-        for i in range(20):
-            kwargs = {'slug': f'r{i}', 'author_data': {'username': f'u{i}'}}
-            self.make_receita(**kwargs)
+        self.make_receita_in_batch(qtd=20)
 
         with patch('receitas.views.PER_PAGE', new=9):
             response = self.client.get(reverse('receitas:home') + '?page=1A')

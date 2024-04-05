@@ -3,10 +3,7 @@ from django.test import TestCase
 from receitas.models import Category, Receita, User
 
 
-class ReceitaTestBase(TestCase):
-    def setUp(self) -> None:
-        return super().setUp()
-
+class ReceitaMixin:
     def make_category(self, name='Category'):
         return Category.objects.create(name=name)
 
@@ -61,3 +58,20 @@ class ReceitaTestBase(TestCase):
             preparations_steps_is_html=preparations_steps_is_html,
             is_published=is_published,
         )
+
+    def make_receita_in_batch(self, qtd=10):
+        receitas = []
+        for i in range(qtd):
+            kwargs = {
+                'title': f'Título da Receita {i}',
+                'slug': f'r{i}',
+                'author_data': {'username': f'u{i}'}
+            }
+            receita = self.make_receita(**kwargs)
+            receitas.append(receita)
+        return receitas
+
+
+class ReceitaTestBase(TestCase, ReceitaMixin):
+    def setUp(self) -> None:
+        return super().setUp()
