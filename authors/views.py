@@ -4,6 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.text import slugify
+
+from authors.forms.receita_form import AuthorReceitaForm
+from receitas.models import Receita
 
 from .forms import LoginForm, RegisterForm
 
@@ -84,4 +88,112 @@ def logout_view(request):
 
 @login_required(login_url='authors:login', redirect_field_name='next')
 def dashboard(request):
-    return render(request, 'authors/pages/dashboard.html')
+    receitas = Receita.objects.filter(
+        is_published=False,
+        author=request.user,
+    )
+    return render(
+        request,
+        'authors/pages/dashboard.html',
+        {
+            'receitas': receitas,
+        }
+    )
+
+
+@login_required(login_url='authors:login', redirect_field_name='next')
+def dashboard_recipe_edit(request, id):
+    receita = Receita.objects.filter(
+        is_published=False,
+        author=request.user,
+        pk=id,
+    ).first()
+
+    if not receita:
+        raise Http404()
+
+    form = AuthorReceitaForm(
+        data=request.POST or None,
+        files=request.FILES or None,
+        instance=receita,
+    )
+
+    if form.is_valid():
+        # Agora o form é valido e é possivel tentar salvar
+        receita = form.save(commit=False)
+
+        receita.author = request.user
+        receita.preparations_steps_is_html = False
+        receita.is_published = False
+
+        receita.save()
+
+        messages.success(request, 'Sua receita foi salva com sucesso')
+        return redirect(reverse('authors:dashboard_recipe_edit', args=(id,)))
+
+    return render(
+        request,
+        'authors/pages/dashboard_recipe.html',
+        context={
+            'form': form
+        }
+    )
+
+
+@login_required(login_url='authors:login', redirect_field_name='next')
+def dashboard_create_recipe(request):
+    form = AuthorReceitaForm(
+        data=request.POST or None,
+        files=request.FILES or None,
+    )
+
+    if form.is_valid():
+        # Agora o form é valido e é possivel tentar salvar
+        receita = form.save(commit=False)
+
+        receita.author = request.user
+        receita.preparations_steps_is_html = False
+        receita.is_published = False
+        receita.slug = slugify(receita.title)
+        i = 1
+        while Receita.objects.filter(slug=receita.slug).exists():
+            receita.slug = f"{slugify(receita.titulo)}-{i}"
+            i += 1
+
+        receita.save()
+
+        messages.success(request, 'Sua receita foi criada com sucesso')
+        return redirect(
+            reverse('authors:dashboard_recipe_edit', args=(receita.id,))
+        )
+
+    return render(
+        request,
+        'authors/pages/dashboard_recipe.html',
+        context={
+            'form': form,
+            'form_action': reverse('authors:dashboard_create_recipe')
+        }
+    )
+
+
+@login_required(login_url='authors:login', redirect_field_name='next')
+def dashboard_recipe_delete(request):
+    if not request.POST:
+        raise Http404()
+
+    POST = request.POST
+    id = POST.get('id')
+
+    receita = Receita.objects.filter(
+        is_published=False,
+        author=request.user,
+        pk=id,
+    ).first()
+
+    if not receita:
+        raise Http404()
+
+    receita.delete()
+    messages.success(request, 'Deleted with successfully')
+    return redirect(reverse('authors:dashboard'))

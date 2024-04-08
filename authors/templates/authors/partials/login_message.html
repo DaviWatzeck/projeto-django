@@ -2,7 +2,10 @@
 <div class="login-message">
     Your are logged in with
     {{ request.user.username}}.
-    If you want loggout
+    <a class="plaintext-button" 
+    href="{% url 'authors:dashboard' %}">See your recipes here</a>, 
+    <a class="plaintext-button" 
+    href="{% url 'authors:dashboard_create_recipe' %}">Create new recipe here</a>, or do you want loggout
     <form class="inline-form" action="{% url 'authors:logout' %}" method='POST'>
         {% csrf_token %}
         <input type="hidden" name="username" value="{{ request.user.username }}">
