@@ -4,12 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.utils.text import slugify
 
+from authors.forms import LoginForm, RegisterForm
 from authors.forms.receita_form import AuthorReceitaForm
 from receitas.models import Receita
-
-from .forms import LoginForm, RegisterForm
 
 
 def register_view(request):
@@ -154,12 +152,6 @@ def dashboard_create_recipe(request):
         receita.author = request.user
         receita.preparations_steps_is_html = False
         receita.is_published = False
-        receita.slug = slugify(receita.title)
-        i = 1
-        while Receita.objects.filter(slug=receita.slug).exists():
-            receita.slug = f"{slugify(receita.titulo)}-{i}"
-            i += 1
-
         receita.save()
 
         messages.success(request, 'Sua receita foi criada com sucesso')
