@@ -10,11 +10,11 @@ class ReceitaCategoryViewTest(ReceitaTestBase):
         view = resolve(
             reverse('receitas:category', kwargs={'category_id': 1000})
         )
-        self.assertIs(view.func, views.category)
+        self.assertIs(view.func.view_class, views.ReceitaListViewCategory)
 
     def test_receita_category_view_returns_404_if_no_recipes_found(self):
         response = self.client.get(
-            reverse('receitas:receita', kwargs={'id': 1000})
+            reverse('receitas:receita', kwargs={'pk': 1000})
         )
         self.assertEqual(response.status_code, 404)
 
@@ -37,6 +37,6 @@ class ReceitaCategoryViewTest(ReceitaTestBase):
         receita = self.make_receita(is_published=False)
 
         response = self.client.get(
-            reverse('receitas:receita', kwargs={'id': receita.category.id}))
+            reverse('receitas:receita', kwargs={'pk': receita.category.id}))
 
         self.assertEqual(response.status_code, 404)

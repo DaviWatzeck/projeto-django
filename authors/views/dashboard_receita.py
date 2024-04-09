@@ -1,18 +1,33 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views import View
 
 from authors.forms.receita_form import AuthorReceitaForm
 from receitas.models import Receita
 
 
+@method_decorator(
+    login_required(login_url='authors:login', redirect_field_name='next'),
+    name='dispatch'
+)
 class DashboardReceita(View):
-    def get_receita(self, id):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def setup(self, *args, **kwargs):
+        return super().setup(*args, **kwargs)
+
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get_receita(self, id=None):
         receita = None
 
-        if id:
+        if id is not None:
             receita = Receita.objects.filter(
                 is_published=False,
                 author=self.request.user,
@@ -33,13 +48,13 @@ class DashboardReceita(View):
             }
         )
 
-    def get(self, request, id):
+    def get(self, request, id=None):
         receita = self.get_receita(id)
         form = AuthorReceitaForm(instance=receita)
 
         return self.render_receita(form)
 
-    def post(self, request, id):
+    def post(self, request, id=None):
         receita = self.get_receita(id)
 
         form = AuthorReceitaForm(
@@ -60,8 +75,20 @@ class DashboardReceita(View):
 
             messages.success(request, 'Sua receita foi salva com sucesso')
             return redirect(
-                reverse('authors:dashboard_recipe_edit', args=(id,)
+                reverse('authors:dashboard_recipe_edit', args=(receita.id,)
                         )
             )
 
         return self.render_receita(form)
+
+
+@method_decorator(
+    login_required(login_url='authors:login', redirect_field_name='next'),
+    name='dispatch'
+)
+class DashboardReceitaDelete(DashboardReceita):
+    def post(self, *args, **kwargs):
+        receita = self.get_receita(self.request.POST.get('id'))
+        receita.delete()
+        messages.success(self.request, 'Deleted with successfully')
+        return redirect(reverse('authors:dashboard'))

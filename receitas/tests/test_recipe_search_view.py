@@ -8,7 +8,7 @@ from .test_recipe_base import ReceitaTestBase
 class ReceitaSearchViewTest(ReceitaTestBase):
     def test_receita_search_uses_correct_view_functionI(self):
         resolved = resolve(reverse('receitas:search'))
-        self.assertIs(resolved.func, views.search),
+        self.assertIs(resolved.func.view_class, views.ReceitaListViewSearch),
 
     def teste_receit_search_loads_correct_template(self):
         response = self.client.get(reverse('receitas:search') + '?q=teste')

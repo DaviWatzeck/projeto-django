@@ -8,13 +8,13 @@ from .test_recipe_base import ReceitaTestBase
 class ReceitaDetailViewTest(ReceitaTestBase):
     def test_receita_detail_view_function_is_correct(self):
         view = resolve(
-            reverse('receitas:receita', kwargs={'id': 1})
+            reverse('receitas:receita', kwargs={'pk': 1})
         )
-        self.assertIs(view.func, views.receita)
+        self.assertIs(view.func.view_class, views.ReceitaDetail)
 
     def test_receita_detail_view_returns_404_if_no_recipes_found(self):
         response = self.client.get(
-            reverse('receitas:receita', kwargs={'id': 1000})
+            reverse('receitas:receita', kwargs={'pk': 1000})
         )
         self.assertEqual(response.status_code, 404)
 
@@ -25,7 +25,7 @@ class ReceitaDetailViewTest(ReceitaTestBase):
 
         response = self.client.get(
             reverse('receitas:receita',
-                    kwargs={'id': 1}
+                    kwargs={'pk': 1}
                     )
         )
         content = response.content.decode('utf-8')
@@ -43,7 +43,7 @@ class ReceitaDetailViewTest(ReceitaTestBase):
             reverse(
                 'receitas:receita',
                 kwargs={
-                    'id': receita.id
+                    'pk': receita.id
                 }
             )
         )

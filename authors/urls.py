@@ -11,13 +11,13 @@ urlpatterns = [
     path('login/create/', views.login_create, name='login_create'),
     path('logout/', views.logout_view, name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('dashboard/create/',
-         views.dashboard_create_recipe,
+    path('dashboard/receita/create/',
+         views.DashboardReceita.as_view(),
          name='dashboard_create_recipe'
          ),
     path(
         'dashboard/recipe/delete/',
-        views.dashboard_recipe_delete,
+        views.DashboardReceitaDelete.as_view(),
         name='dashboard_recipe_delete'
     ),
     path(

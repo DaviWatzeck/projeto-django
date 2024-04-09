@@ -10,7 +10,7 @@ from .test_recipe_base import ReceitaTestBase
 class ReceitaHomeViewTest(ReceitaTestBase):
     def test_receita_home_view_function_is_correct(self):
         view = resolve(reverse('receitas:home'))
-        self.assertIs(view.func, views.home)
+        self.assertIs(view.func.view_class, views.ReceitaListViewHome)
 
     def test_receita_home_view_returns_status_code_200_OK(self):
         response = self.client.get(reverse('receitas:home'))
